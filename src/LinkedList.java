@@ -333,17 +333,17 @@ public class LinkedList {
 
     public static void main(String[] args) {
         LinkedList ll = new LinkedList();
-//        ll.addLast(1);
-//        ll.addLast(2);
-//        ll.addLast(2);
-//        ll.addLast(1);
+        ll.addLast(1);
+        ll.addLast(2);
+        ll.addLast(2);
+        ll.addLast(1);
 //        ll.add(2,3);
 //        ll.print(); //1->2->3->4->5
 //        System.out.println(ll.size);
-//        ll.removeFirst();
+        ll.removeFirst();
 //        ll.print();
 //        System.out.println(ll.size);
-//        ll.removeLast();
+        ll.removeLast();
 //        ll.print();
 //        System.out.println(ll.size);
 //        System.out.println(ll.search(4));

@@ -56,10 +56,10 @@ public static void triangleOI(int n)
     }
 }
     public static void main(String[] args) {
-        // inverted_rotated_half_pyramid(6);
-        // inverted_half_pyramid(6);
-        // floydsTriangle(5);
-        triangleOI(5);
+//         inverted_rotated_half_pyramid(6);
+//         inverted_half_pyramid(6);
+         floydsTriangle(5);
+//        triangleOI(5);
     }
     
 }
