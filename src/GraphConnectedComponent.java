@@ -66,7 +66,7 @@ public class GraphConnectedComponent {
 
     public static void bfsUtil(ArrayList<Edge>[] graph, boolean[] vis) { // O(V+E) Depends on which is greater V or E in AL || O(V^2) AM
         Queue<Integer> q = new LinkedList<>();
-        q.add(0);
+        q.add(0); //source = 0
         while(!q.isEmpty()) {
             int curr = q.remove();
 
