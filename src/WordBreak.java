@@ -1,4 +1,4 @@
-public class TriesBasics {
+public class WordBreak {
     static class Node {
         Node[] children = new Node[26];
         boolean eow = false;
@@ -33,26 +33,31 @@ public class TriesBasics {
         }
         return curr.eow;
     }
-    public static boolean startsWith(String prefix){ //O(L) where l is the length of prefix
-        Node curr = root;
-        for (int level = 0; level < prefix.length(); level++) {
-            int idx = prefix.charAt(level) - 'a';
-            if (curr.children[idx] == null) {
-                return false;
-            }
-            curr = curr.children[idx];
+
+    public static boolean wordBreak(String key) {
+        if (key.length() == 0) {
+            return true;
         }
-        return true;
+        for (int i = 1; i <= key.length(); i++) {
+            //substring(beg idx, last idx) -> ye last index jo hai exclusive hota hai ye aayega hi nahi
+            // suppose i=0 rakha to to substring(0,i) invalid ho jayega
+            if (search(key.substring(0, i)) && wordBreak(key.substring(i))) { // wordBreak ki substring me i ko as a beggining ki tarah treat karega
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Node root = new Node();
 
     public static void main(String[] args) {
-        String[] word = {"the", "a", "there", "their", "any", "thee"};
-        for (int i = 0; i < word.length; i++) {
-            insert(word[i]);
+        String[] arr = {"i", "like", "sam", "samsung", "mobile", "ice"};
+        for (int i = 0; i < arr.length; i++) {
+            insert(arr[i]);
         }
-        System.out.println(search("thee"));
-        System.out.println(startsWith("tho"));
+
+        String key = "ilikesamsung";
+        System.out.println(wordBreak(key));
+
     }
 }
