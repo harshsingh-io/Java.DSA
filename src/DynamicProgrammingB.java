@@ -45,7 +45,6 @@ public class DynamicProgrammingB {
         }
         return ways[n];
     }
-    
 
     public static void main(String[] args) {
         int n = 5;
