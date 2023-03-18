@@ -61,7 +61,8 @@ public class ZeroOneKnapsack {
         printDP(dp); // printing DP for Clarification
         return dp[n][W];
     }
-    public static void printDP(int[][] dp){
+
+    public static void printDP(int[][] dp) {
         System.out.println();
         for (int i = 0; i < dp.length; i++) {
             for (int j = 0; j < dp[0].length; j++) {
@@ -70,6 +71,29 @@ public class ZeroOneKnapsack {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public static boolean targetSumSubset(int arr[], int sum) {
+        int n = arr.length;
+        boolean[][] dp = new boolean[n + 1][sum + 1];
+        //i= items & ] = target sum
+        for (int i = 0; i < n + 1; i++) {
+            dp[1][0] = true;
+        }
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < sum + 1; j++) {
+                int v = arr[i - 1];
+                //include
+                if (v < j && dp[i - 1][j - v] == true) {
+                    dp[i][j] = true;
+                }
+                //exclude
+                else if (dp[i - 1][j] = true) {
+                    dp[i][j] = true;
+                }
+            }
+        }
+        return dp[n][sum];
     }
 
     public static void main(String[] args) {
@@ -87,7 +111,12 @@ public class ZeroOneKnapsack {
                 dp[i][j] = -1;
             }
         }
-        System.out.println(knapsackMemoization(val, wt, W, n, dp));
-        System.out.println(knapsackTabulation(val, wt, W));
+//        System.out.println(knapsackMemoization(val, wt, W, n, dp));
+//        System.out.println(knapsackTabulation(val, wt, W));
+
+        int[] num = {4,3,1,2,7};
+        int sum = 10;
+        System.out.println(targetSumSubset(num, sum));
+
     }
 }
