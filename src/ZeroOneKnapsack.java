@@ -114,7 +114,7 @@ public class ZeroOneKnapsack {
 //        System.out.println(knapsackMemoization(val, wt, W, n, dp));
 //        System.out.println(knapsackTabulation(val, wt, W));
 
-        int[] num = {4,3,1,2,7};
+        int[] num = {4, 3, 1, 2, 7};
         int sum = 10;
         System.out.println(targetSumSubset(num, sum));
 
