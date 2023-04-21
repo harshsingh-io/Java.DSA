@@ -11,7 +11,6 @@ public class CountingBST {
                 int left = dp[j]; // for left subtree
                 int right = dp[i-j-1]; // for right subtree
                 dp[i]+=left*right; //Ci= Cj * Ci-j-1
-
             }
         }
         return dp[n];
