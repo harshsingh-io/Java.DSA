@@ -64,7 +64,7 @@ public class SegmentTrees {
 //            System.out.print(tree[i] + " ");
 //        }
         System.out.println(getSum(arr, 2, 5));
-        update(arr,2,2);
-        System.out.println(getSum(arr,2,5));
+        update(arr, 2, 2);
+        System.out.println(getSum(arr, 2, 5));
     }
 }
