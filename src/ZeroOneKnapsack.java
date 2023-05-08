@@ -50,7 +50,7 @@ public class ZeroOneKnapsack {
                 int w = wt[i - 1];
                 if (w <= j) { //Valid Condition
                     int includeProfit = v + dp[i - 1][j - w];
-                    int excludeProfit = dp[i - 1][j - w];
+                    int excludeProfit = dp[i - 1][j];
                     dp[i][j] = Math.max(includeProfit, excludeProfit);
                 } else {
                     int excludeProfit = dp[i - 1][j];
