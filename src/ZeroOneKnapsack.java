@@ -58,7 +58,7 @@ public class ZeroOneKnapsack {
                 }
             }
         }
-        printDP(dp); // printing DP for Clarification
+//        printDP(dp); // printing DP for Clarification
         return dp[n][W];
     }
 
