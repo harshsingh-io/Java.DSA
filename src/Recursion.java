@@ -60,7 +60,7 @@ public class Recursion {
         }
         return isSorted(arr,i+1);
     }
-    public static int findKey(int[] arr, int i, int key){
+    public static int findKey(int[] arr, int i, int key){ //first occurence
         if (i== arr.length-1){ // base case
             return -1; //which shows key not found
         }
@@ -69,7 +69,7 @@ public class Recursion {
         }
         return findKey(arr,i+1,key);
     }
-    public static int lastFindKey(int[] arr, int i,int key){
+    public static int lastFindKey(int[] arr, int i,int key){ // last occurence
         if(i==0){
             return -1;
         }
@@ -133,9 +133,9 @@ public class Recursion {
         System.out.println(ans);
 //        int[] array = {1,2,3,4,5};
 //        System.out.println(isSorted(array,0));
-//        int[] array1 = {8,3,6,9,5,10,2,5,3};
-//        System.out.println(findKey(array1,0,3));
-//        System.out.println(lastFindKey(array1,array1.length-1,5));
+        int[] array1 = {8,3,6,9,5,10,2,5,3};
+        System.out.println(findKey(array1,0,3));
+        System.out.println(lastFindKey(array1,array1.length-1,5));
 //        System.out.println(powOf(2,4));
 //        System.out.println(OptPowOf(2,5));
 //        System.out.println(tilingProblem(5));
