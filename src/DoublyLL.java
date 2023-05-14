@@ -57,6 +57,23 @@ public class DoublyLL {
         size--;
         return val;
     }
+    //    removeFirst
+    public int removeLast(){
+        if (head==null){
+            System.out.println("LinkedList is empty");
+            return Integer.MIN_VALUE;
+        }
+        if (size==1){
+            int val = head.data;
+            head=tail=null;
+        }
+        int val = tail.data;
+        tail = tail.prev;
+//      new head previous should be null
+        tail.next=null;
+        size--;
+        return val;
+    }
 //    print
     public void print(){
         Node temp = head;
@@ -67,6 +84,7 @@ public class DoublyLL {
         }
         System.out.println("null");
     }
+
     public void reverse(){
         Node curr = head;
         Node prev = null;
@@ -85,16 +103,18 @@ public class DoublyLL {
 
     public static void main(String[] args) {
         DoublyLL dll = new DoublyLL();
-        dll.addFirst(1);
-        dll.addFirst(2);
         dll.addFirst(3);
-        dll.addFirst(4);
+        dll.addFirst(2);
+        dll.addFirst(1);
+        dll.addFirst(0);
         dll.removeFirst();
         dll.print();
-        System.out.println(dll.size);
-        dll.reverse();
+        dll.removeLast();
         dll.print();
-        dll.addLast(6);
-        dll.print();
+//        System.out.println(dll.size);
+//        dll.reverse();
+//        dll.print();
+//        dll.addLast(6);
+//        dll.print();
     }
 }
