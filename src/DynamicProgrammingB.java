@@ -1,4 +1,5 @@
 import java.util.Arrays;
+
 public class DynamicProgrammingB {
     public static int climbingStairsWays(int n) {
         //recursion

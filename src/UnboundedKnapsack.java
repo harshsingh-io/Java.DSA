@@ -26,6 +26,7 @@ public class UnboundedKnapsack {
 //        printDP(dp); // printing DP for Clarification
         return dp[n][W];
     }
+
     public static int rodCutting(int[] length, int[] price, int totRod) {
         int n = price.length;
         int[][] dp = new int[n + 1][totRod + 1];
@@ -60,8 +61,8 @@ public class UnboundedKnapsack {
         int W = 7;
         System.out.println(unboundedKnapsackTabulation(val, wt, W));
 
-        int[] length = {1,2,3,4,5,6,7,8}; //Pieces Length
-        int[] price = {1,5,8,9,10,17,17,20};
+        int[] length = {1, 2, 3, 4, 5, 6, 7, 8}; //Pieces Length
+        int[] price = {1, 5, 8, 9, 10, 17, 17, 20};
         int totRod = 8;
 
         System.out.println(rodCutting(length, price, totRod));

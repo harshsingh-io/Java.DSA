@@ -16,7 +16,7 @@ public class CoinChange {
                 if (ithcoin <= j) { //When ith coin is less than sum
                     int includeProfit = dp[i][j - ithcoin]; //Here is the only change instead of i-1 we use i as we can include the current item again and again
                     int excludeProfit = dp[i - 1][j];
-                    dp[i][j] = includeProfit+excludeProfit;
+                    dp[i][j] = includeProfit + excludeProfit;
                 } else { //Uncoinsid Condition
                     int excludeProfit = dp[i - 1][j];
                     dp[i][j] = excludeProfit;
@@ -26,8 +26,9 @@ public class CoinChange {
 //        printDP(dp); // printing DP for Clarification
         return dp[n][sum];
     }
+
     public static void main(String[] args) {
-        int[] coins = {1,2,3};
+        int[] coins = {1, 2, 3};
         int sum = 4;
         System.out.println(coinChange(coins, sum));
     }
