@@ -4,7 +4,7 @@ public class CoinChange {
         int[][] dp = new int[n + 1][sum + 1];
         //initialization (i-> coins, j -> sum/change
         for (int i = 0; i < dp.length; i++) { // where sum  is 0
-            dp[i][0] = 0;
+            dp[i][0] = 1;
         }
         for (int j = 1; j < dp[0].length; j++) { // Where no. of coin is 0
             dp[0][j] = 0;
