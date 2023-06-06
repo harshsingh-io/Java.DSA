@@ -78,6 +78,7 @@ public class AdvPattern {
 //        floydsTriangle(5);
 //        triangleOI(5);
 //        numPyramid(5);
+        System.out.println();
         palindromicWithNum(5);
     }
 

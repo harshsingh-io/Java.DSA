@@ -246,7 +246,8 @@ public class StackJCF {
 
         // Max Area of histogram of rectangle
 //        int[] height = {2,1,5,6,2,3};
-//        maxArea(height);
+        int[] height = {1,4,3,5,6};
+        maxArea(height);
 
     }
 }
