@@ -7,10 +7,10 @@ public class LargestSubArraySum {
         //(sum, Index)
         int sum = 0;
         int lens = 0;
-        for (int j=0;j<arr.length; j++){
-            sum+= arr[j];
-            if (map.containsKey(sum)){
-                lens=Math.max(lens, j-map.get(sum));
+        for (int j = 0; j < arr.length; j++) {
+            sum += arr[j];
+            if (map.containsKey(sum)) {
+                lens = Math.max(lens, j - map.get(sum));
             } else {
                 map.put(sum, j);
             }
