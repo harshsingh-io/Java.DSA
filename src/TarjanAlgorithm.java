@@ -39,28 +39,30 @@ public class TarjanAlgorithm {
         graph[5].add(new Edge(5, 4, 1));
 
     }
+
     public static void dfs(ArrayList<Edge>[] graph, int curr, int par,
                            int[] dt, int[] low, boolean[] vis, int time) {
 
         vis[curr] = true;
         dt[curr] = low[curr] = ++time;
 
-        for (int i=0; i<graph[curr].size(); i++){
+        for (int i = 0; i < graph[curr].size(); i++) {
             Edge e = graph[curr].get(i); // e.src ---- e.dest
             int neighbour = e.dest;
             if (neighbour == par) {
                 continue;
             } else if (!vis[neighbour]) {
-                dfs(graph,neighbour,curr,dt,low,vis,time);
-                low[curr] = Math.min(low[curr],low[neighbour]);
-                if (dt[curr]<low[neighbour]){
-                    System.out.println("Bridge : "+ curr + " ---- " + neighbour);
+                dfs(graph, neighbour, curr, dt, low, vis, time);
+                low[curr] = Math.min(low[curr], low[neighbour]);
+                if (dt[curr] < low[neighbour]) {
+                    System.out.println("Bridge : " + curr + " ---- " + neighbour);
                 }
             } else {
                 low[curr] = Math.min(low[curr], dt[neighbour]);
             }
         }
     }
+
     public static void tarjanAlgo(ArrayList<Edge>[] graph, int V) { // To find bridge in a graph we use tarjan's Algorithm
         int[] dt = new int[V];
         int[] low = new int[V];
@@ -68,10 +70,11 @@ public class TarjanAlgorithm {
 
         int time = 0;
 
-        for (int i = 0; i<V; i++){
-            dfs(graph,i,-1,dt,low,vis,time);
+        for (int i = 0; i < V; i++) {
+            dfs(graph, i, -1, dt, low, vis, time);
         }
     }
+
     public static void main(String[] args) {
         int V = 6;
 
