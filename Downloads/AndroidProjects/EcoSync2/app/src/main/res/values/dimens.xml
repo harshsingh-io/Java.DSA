@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="splash_screen_title_text_size">40sp</dimen>
+    <dimen name="splash_screen_title_marginLeft">10dp</dimen>
+    <dimen name="splash_screen_title_marginTop">10dp</dimen>
+    <dimen name="splash_screen_title_marginStart">10dp</dimen>
+
+    <dimen name="progress_bar_marginEnd">10dp</dimen>
+    <dimen name="progress_bar_text_size">16sp</dimen>
+    <dimen name="main_content_padding_progress_dialog">10dp</dimen>
+    <dimen name="notification_button_margin">15dp</dimen>
+
+    <dimen name="btn_text_size">18sp</dimen>
+    <dimen name="btn_paddingTopBottom">8dp</dimen>
+    <dimen name="btn_marginStartEnd">20dp</dimen>
+
+    <dimen name="activity_intro_button_margin">10dp</dimen>
+    <dimen name="activity_intro_slogan_text_size">25sp</dimen>
+    <dimen name="activity_intro_text_margin">10dp</dimen>
+    <dimen name="activity_intro_button_text_size">14sp</dimen>
+    <dimen name="activity_intro_terms_and_conditions_text_size">14sp</dimen>
+    <dimen name="sign_in_text_size">18sp</dimen>
+    <dimen name="sign_in_text_margin">10dp</dimen>
+    <dimen name="sign_in_logo_padding">10dp</dimen>
+    <dimen name="sign_in_logo_margin">10dp</dimen>
+
+
+    <dimen name="sign_up_screen_btn_marginTop">30dp</dimen>
+    <dimen name="toolbar_title_text_size">18sp</dimen>
+    <dimen name="authentication_screen_content_marginTop">40dp</dimen>
+    <dimen name="authentication_description_text_size">16sp</dimen>
+    <dimen name="authentication_screen_marginStartEnd">25dp</dimen>
+    <dimen name="authentication_screen_card_view_marginTop">60dp</dimen>
+    <dimen name="card_view_elevation">10dp</dimen>
+    <dimen name="card_view_corner_radius">10dp</dimen>
+    <dimen name="card_view_layout_content_padding">16dp</dimen>
+    <dimen name="authentication_screen_til_marginStartEnd">16dp</dimen>
+    <dimen name="et_text_size">16sp</dimen>
+    <dimen name="authentication_screen_til_marginTop">20dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="sign_up_branding_margin">20dp</dimen>
+
+    <dimen name="progress_dialog_content_padding">10dp</dimen>
+    <dimen name="progress_bar_size">50dp</dimen>
+    <dimen name="progress_text_marginStart">16dp</dimen>
+    <dimen name="progress_text_size">16sp</dimen>
+</resources>

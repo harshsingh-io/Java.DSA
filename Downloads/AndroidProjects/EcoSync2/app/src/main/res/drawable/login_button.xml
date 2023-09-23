@@ -1,0 +1,31 @@
+<!-- res/drawable/custom_button_transparent.xml -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Default state -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Transparent background -->
+            <solid android:color="#00000000" />
+
+            <!-- White outline -->
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+
+            <!-- 8dp corner radius -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <!-- Light gray background when pressed -->
+            <solid android:color="#EAEAEA" />
+
+            <!-- White outline -->
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+
+            <!-- 8dp corner radius -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</selector>

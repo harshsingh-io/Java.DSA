@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">EcoSync</string>
+    <string name="ecoSync">EcoSync</string>
+
+    <string name="please_click_back_again_to_exit">Please click back again to exit.</string>
+    <string name="please_wait">Please Wait&#8230;</string>
+    <string name="log_in">Log in</string>
+    <string name="saving_watts_and_drops_the_smart_way">Saving Watts and Drops, the Smart Way!</string>
+    <string name="by_signing_up_you_agree_to_our_terms_of_services_and_privacy_policy">By signing up, you agree to our Terms of services and Privacy Policy</string>
+    <string name="contact_us">Contact support</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="google_logo">google logo</string>
+    <string name="sign_in_with_email">SIGN IN WITH EMAIL</string>
+    <string name="email_icon">email icon</string>
+    <string name="notification_subheading">Get notified when you\'re mentioned. have upcoming due dates and more. You can change your notification settings any time.</string>
+    <string name="notification_heading">Stay up to date on your Trello boards</string>
+    <string name="enable_notifications">Enable notifications</string>
+    <string name="cancel_notification">Maybe later</string>
+    <string name="logging_in">Logging you in&#8230;</string>
+
+    <string name="sign_up_description_text">Enter your name, email id and password, to register with us.</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="sign_in">SIGN IN</string>
+
+</resources>

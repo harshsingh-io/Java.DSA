@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimaryBlue">#0568E6</color>
+
+    <color name="colorPrimary">#053B50</color>
+    <color name="colorSecondary">#176B87</color>
+    <color name="colorHighlight">#64CCC5</color>
+    <color name="colorBackground">#EEEEEE</color>
+
+    <color name="primary_text_color">#363A43</color>
+    <color name="secondary_text_color">#7A8089</color>
+
+    <color name="snackbar_error_color">#F72400</color>
+</resources>
