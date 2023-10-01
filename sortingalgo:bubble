@@ -1,0 +1,18 @@
+//let the array be a
+//CODE
+
+	for(int i=0;i<a.length-1;i++){ //taking into consideration the element at index i
+	    for(int j=0;j<a.length-1;j++){ // comparison of the element i with element at index j
+	        if(a[j]>a[j+1]){ // if the one at j index is greater than the one at j+1 we will swap 
+         
+	            int temp=a[j];
+	            a[j]=a[j+1];
+	            a[j+1]=temp;
+	        }
+	    }
+	}
+ // this goes on till all the elements are sorted from ascending to descending
+ //displaying the sorted array
+	for(int k=0;k<a.length;k++){
+	    System.out.print(a[k]+" ");
+	}
