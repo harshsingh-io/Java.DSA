@@ -1,0 +1,14 @@
+//let the input array be a
+for(int i=0;i<a.length-1;i++){ //running a for loop from index i 
+	    for(int j=0;j<a.length-1;j++){ //compare each element at index i with the one at j
+	        if(a[j]>a[j+1]){  //if element at index j is greater than j+1 then swap
+	            int temp=a[j];
+	            a[j]=a[j+1];
+	            a[j+1]=temp;
+	        }
+	    }
+	}
+//displaying of the sorted arr
+	for(int k=0;k<a.length;k++){
+	    System.out.print(a[k]+" ");
+	}
