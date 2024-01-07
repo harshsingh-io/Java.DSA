@@ -13,6 +13,8 @@ class BeerDetailsScreen extends StatefulWidget {
 }
 
 class _BeerDetailsScreenState extends State<BeerDetailsScreen> {
+  String selectedSection = 'Description'; // Default section
+
   @override
   void initState() {
     super.initState();
@@ -36,20 +38,93 @@ class _BeerDetailsScreenState extends State<BeerDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0), // Adjust the radius as needed
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
                       child: Image.network(
                         beer.imageUrl,
-                        height: 200.0,
+                        fit: BoxFit.contain,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         width: double.infinity,
-                        fit: BoxFit.cover,
                       ),
                     ),
                     SizedBox(height: 16.0),
-                    Text('Name: ${beer.name}'),
-                    Text('ABV: ${beer.abv.toStringAsFixed(1)}%'),
-                    Text('IBU: ${beer.ibu.toStringAsFixed(1)}'),
-                    // Add more details as needed
+                    Text(
+                      beer.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Text(
+                      beer.tagline,
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Divider(height: 1.0, thickness: 1.0),
+                    SizedBox(height: 16.0),
+                    // Navigation
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedSection = 'Description';
+                            });
+                          },
+                          child: Text(
+                            'Description',
+                            style: TextStyle(
+                              fontWeight: selectedSection == 'Description'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedSection = 'Specifications';
+                            });
+                          },
+                          child: Text(
+                            'Specifications',
+                            style: TextStyle(
+                              fontWeight: selectedSection == 'Specifications'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    // Content based on selected section
+                    if (selectedSection == 'Description')
+                      Text(
+                        beer.description,
+                        style: TextStyle(fontSize: 16.0),
+                      )
+                    else if (selectedSection == 'Specifications')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('ABV: ${beer.abv.toStringAsFixed(1)}%'),
+                          Text('IBU: ${beer.ibu.toStringAsFixed(1)}'),
+                          Text('Brewing Method: ${beer.brewingMethod}'),
+                          SizedBox(height: 16.0),
+                          Text('Ingredients: ${beer.ingredients.join(', ')}'),
+                          SizedBox(height: 16.0),
+                          Text('Food Pairing: ${beer.foodPairing.join(', ')}'),
+                          SizedBox(height: 16.0),
+                          Text('Brewer\'s Tips: ${beer.brewersTips}'),
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -60,8 +135,7 @@ class _BeerDetailsScreenState extends State<BeerDetailsScreen> {
             );
           }
 
-          // Loading indicator
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
