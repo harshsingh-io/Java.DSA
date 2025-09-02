@@ -136,3 +136,94 @@ static void insertionSort(int[] arr) {
 *   The inner loop (`j`) starts from `i+1` and goes down to `1` (or `j > 0`).
 *   The core logic involves comparing `arr[j]` with `arr[j-1]` and swapping if `arr[j]` is smaller.
 *   A critical optimization is the `break` statement in the inner loop: if `arr[j]` is not smaller than `arr[j-1]`, it means the element is already in its correct sorted position relative to the left sub-array, and no further comparisons to the left are necessary.
+
+### Recursive Approach:
+
+```java
+class Solution {
+    /*
+    [ 4, 1, 3, 9, 7 ]
+    insertionSortRecursion(i, j, nums)
+    i = 0, j = 0 [4, 1, 3, 9, 7] 
+    i = 1, j = 1 [4, 1, 3, 9, 7] 
+    i = 1, j = 0 [1, 4, 3, 9, 7] 
+    i = 2, j = 2 [1, 4, 3, 9, 7] 
+    i = 2, j = 1 [1, 3, 4, 9, 7] 
+    i = 2, j = 0 [1, 3, 4, 9, 7]
+    i = 3, j = 3 [1, 3, 4, 9, 7] 
+    i = 3, j = 2 [1, 3, 4, 9, 7]
+    i = 3, j = 1 [1, 3, 4, 9, 7]
+    i = 3, j = 0 [1, 3, 4, 9, 7]
+    i = 4, j = 4 [1, 3, 4, 9, 7]
+    i = 4, j = 3 [1, 3, 4, 7, 9]
+    */
+    
+    /**
+     * This function acts as the "outer loop", picking one element at a time
+     * from the unsorted part of the array.
+     * @param arr The array to be sorted.
+     * @param i The index of the current element to be inserted.
+     */
+    private void sortRecursively(int[] arr, int i) {
+        // Base case: If we've processed all elements, the array is sorted.
+        if (i >= arr.length) {
+            return;
+        }
+
+        // Start the "inner loop" process to insert the element at arr[i]
+        // into its correct place within the sorted subarray arr[0...i-1].
+        insert(arr, i);
+
+        // Recur for the next element.
+        sortRecursively(arr, i + 1);
+    }
+
+    /**
+     * This function acts as the "inner loop", using recursion to swap
+     * the element at index j leftwards until it is in the correct sorted position.
+     * @param arr The array being sorted.
+     * @param j The index of the element currently being moved.
+     */
+    private void insert(int[] arr, int j) {
+        // Base case: If we've reached the start of the array or the element
+        // is now in its correct sorted position (it's >= the one before it).
+        if (j <= 0 || arr[j] >= arr[j - 1]) {
+            return;
+        }
+
+        // Swap the element with the one to its left.
+        int temp = arr[j];
+        arr[j] = arr[j - 1];
+        arr[j - 1] = temp;
+
+        // Continue the insertion process by moving to the left.
+        insert(arr, j - 1);
+    }
+    // The main public method that starts the recursion.
+    public void insertionSort(int[] arr) {
+        // We start the sorting process from the second element (index 1),
+        // as the first element is already a "sorted" subarray of one.
+        sortRecursively(arr, 1);
+    }
+
+}
+```
+
+To implement Insertion Sort recursively, we can model the two nested loops of the iterative version with two separate recursive functions.
+
+  * One function, `sortRecursively`, will act as the **outer loop**, responsible for picking an element from the unsorted part of the array.
+  * A second function, `insert`, will act as the **inner loop**, responsible for inserting that chosen element into its correct position within the already sorted part.
+
+#### Explanation of the Logic
+
+1.  **`sortRecursively(arr, i)` (The "Outer Loop"):**
+
+      * This function's job is to ensure that the subarray from `arr[0]` to `arr[i]` is sorted.
+      * **Base Case:** If `i` reaches the end of the array (`i >= arr.length`), it means all elements have been processed, and the recursion stops.
+      * **Recursive Step:** For a given `i`, it first calls `insert(arr, i)` to place the element at `arr[i]` into its correct sorted position within the `arr[0...i-1]` subarray. After that's done, it makes a recursive call for the next element: `sortRecursively(arr, i + 1)`.
+
+2.  **`insert(arr, j)` (The "Inner Loop"):**
+
+      * This function takes an element at index `j` and recursively shifts it to the left until it finds its correct sorted position.
+      * **Base Case:** The recursion stops if `j` reaches the beginning of the array (`j <= 0`) or if the element `arr[j]` is no longer smaller than the element to its left (`arr[j] >= arr[j-1]`). This second condition is the same as the `break` statement in the iterative version, making the algorithm adaptive.
+      * **Recursive Step:** If the element `arr[j]` is smaller than `arr[j-1]`, it swaps them. Then, it makes a recursive call to continue shifting the element leftward: `insert(arr, j - 1)`.
