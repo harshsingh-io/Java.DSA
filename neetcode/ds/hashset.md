@@ -120,3 +120,14 @@ The performance of a `HashSet` is heavily dependent on the hash function of its 
   * **Unordered:** Provides no guarantee on the order of elements. If you need insertion order, use `LinkedHashSet`. If you need natural sorting order, use `TreeSet`.
   * **No Index-Based Access:** You cannot retrieve an element by its index (e.g., `get(i)`), as there is no defined order. You must iterate to access elements.
   * **Performance Degradation:** In the rare worst case of frequent hash collisions, performance can drop to $O(n)$.
+
+
+  ### **Some Important Functions** : 
+
+  1. Converting HashSet into array: 
+  ```java
+      public int[] convertSetToIntArray(Set<Integer> mySet) {
+        return mySet.stream().mapToInt(Integer::intValue).toArray();
+      }
+  ```
+  2. 
