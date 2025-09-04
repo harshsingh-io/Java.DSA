@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graph Data Structures: A Comprehensive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#047857",
+              secondary: "#065f46",
+              accent: "#d97706",
+              neutral: "#374151",
+              "base-100": "#ffffff",
+              "base-200": "#f9fafb",
+              "base-300": "#f3f4f6",
+            },
+            fontFamily: {
+              serif: ["Playfair Display", "serif"],
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Mermaid diagram styling */
+      .mermaid-container {
+        display: flex;
+        justify-content: center;
+        min-height: 300px;
+        max-height: 800px;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mermaid-container .mermaid {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        cursor: grab;
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .mermaid-container .mermaid svg {
+        max-width: 100%;
+        height: 100%;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .mermaid-container .mermaid:active {
+        cursor: grabbing;
+      }
+
+      .mermaid-container.zoomed .mermaid {
+        height: 100%;
+        width: 100%;
+        cursor: grab;
+      }
+
+      .mermaid-controls {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 10px;
+        z-index: 20;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .mermaid-control-btn {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #374151;
+        font-size: 14px;
+        min-width: 36px;
+        height: 36px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mermaid-control-btn:hover {
+        background: #f8fafc;
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: translateY(-1px);
+      }
+
+      .mermaid-control-btn:active {
+        transform: scale(0.95);
+      }
+
+      @media (max-width: 1024px) {
+        .mermaid-control-btn:not(.reset-zoom) {
+          display: none;
+        }
+        .mermaid-controls {
+          top: auto;
+          bottom: 15px;
+          right: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="font-sans bg-base-100 text-neutral leading-relaxed">
+    <!-- Fixed Table of Contents -->
+    <nav
+      id="toc"
+      class="fixed left-0 top-0 h-screen w-80 bg-base-200 border-r border-base-300 overflow-y-auto z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300"
+    >
+      <div class="p-6">
+        <h3 class="font-serif text-lg font-bold text-primary mb-4">
+          Table of Contents
+        </h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a
+              href="#hero"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >Introduction</a
+            >
+          </li>
+          <li>
+            <a
+              href="#about-graphs"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >1. About Graph Data Structure</a
+            >
+          </li>
+          <li>
+            <a
+              href="#java-representation"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >2. Graph Representation in Java</a
+            >
+          </li>
+          <li>
+            <a
+              href="#operations"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >3. Graph Operations & Algorithms</a
+            >
+          </li>
+          <li>
+            <a
+              href="#time-complexity"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >4. Time Complexity Analysis</a
+            >
+          </li>
+          <li>
+            <a
+              href="#patterns"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >5. Common Problem Patterns</a
+            >
+          </li>
+          <li>
+            <a
+              href="#advantages"
+              class="block py-1 px-2 rounded hover:bg-primary hover:text-white transition-colors"
+              >6. Advantages & Disadvantages</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Toggle button for small screens -->
+    <button
+      id="toc-toggle"
+      class="fixed top-4 left-4 z-50 lg:hidden bg-primary text-white p-3 rounded-full shadow-lg"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="ml-0 lg:ml-80 min-h-screen transition-all duration-300">
+      <!-- Hero Section -->
+      <section
+        id="hero"
+        class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-primary/5 relative overflow-hidden"
+      >
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5">
+          <div
+            class="absolute top-20 left-20 w-32 h-32 border-2 border-primary rounded-full"
+          ></div>
+          <div
+            class="absolute top-40 right-32 w-24 h-24 border border-accent rotate-45"
+          ></div>
+          <div
+            class="absolute bottom-32 left-1/3 w-20 h-20 bg-primary rounded-full"
+          ></div>
+        </div>
+
+        <div
+          class="relative z-10 container mx-auto px-4 sm:px-6 md:px-12 py-20"
+        >
+          <!-- Bento Grid Layout -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- Main Title Card -->
+            <div
+              class="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-12 shadow-2xl border border-base-300"
+            >
+              <div class="space-y-8">
+                <div class="space-y-4">
+                  <h1
+                    class="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold text-neutral leading-tight"
+                  >
+                    <span class="italic text-primary">Graph</span>
+                    <br />
+                    Data Structures
+                  </h1>
+                  <p
+                    class="text-lg sm:text-xl text-neutral/70 font-light leading-relaxed"
+                  >
+                    A comprehensive exploration of graph theory, algorithms, and
+                    practical implementations for modern computing challenges.
+                  </p>
+                </div>
+
+                <div
+                  class="flex items-center space-x-4 text-sm text-neutral/60"
+                >
+                  <span class="flex items-center space-x-2">
+                    <i class="fas fa-code text-primary"></i>
+                    <span>Java Implementations</span>
+                  </span>
+                  <span class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-accent"></i>
+                    <span>Algorithm Analysis</span>
+                  </span>
+                  <span class="flex items-center space-x-2">
+                    <i class="fas fa-network-wired text-primary"></i>
+                    <span>Real-world Applications</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Key Highlights Card -->
+            <div class="space-y-6">
+              <div
+                class="bg-primary/10 rounded-2xl p-6 md:p-8 border border-primary/20"
+              >
+                <h3 class="font-serif text-xl font-bold text-primary mb-4">
+                  Core Concepts
+                </h3>
+                <ul class="space-y-3 text-sm">
+                  <li class="flex items-start space-x-3">
+                    <i class="fas fa-circle text-primary text-xs mt-2"></i>
+                    <span
+                      ><strong>Vertices & Edges:</strong> Fundamental building
+                      blocks of graph structures</span
+                    >
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <i class="fas fa-circle text-primary text-xs mt-2"></i>
+                    <span
+                      ><strong>Directed/Undirected:</strong> Representing
+                      one-way or bidirectional relationships</span
+                    >
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <i class="fas fa-circle text-primary text-xs mt-2"></i>
+                    <span
+                      ><strong>Weighted Graphs:</strong> Adding cost metrics to
+                      connections</span
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <div
+                class="bg-accent/10 rounded-2xl p-6 md:p-8 border border-accent/20"
+              >
+                <h3 class="font-serif text-xl font-bold text-accent mb-4">
+                  Key Algorithms
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                  <div class="bg-white/60 rounded-lg p-3">
+                    <div class="font-semibold text-neutral">BFS & DFS</div>
+                    <div class="text-xs text-neutral/70">Traversal</div>
+                  </div>
+                  <div class="bg-white/60 rounded-lg p-3">
+                    <div class="font-semibold text-neutral">Dijkstra's</div>
+                    <div class="text-xs text-neutral/70">Shortest Path</div>
+                  </div>
+                  <div class="bg-white/60 rounded-lg p-3">
+                    <div class="font-semibold text-neutral">
+                      Prim's & Kruskal's
+                    </div>
+                    <div class="text-xs text-neutral/70">MST</div>
+                  </div>
+                  <div class="bg-white/60 rounded-lg p-3">
+                    <div class="font-semibold text-neutral">
+                      Topological Sort
+                    </div>
+                    <div class="text-xs text-neutral/70">DAG Ordering</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Graph Representation -->
+          <div
+            class="mt-16 bg-white/60 backdrop-blur-sm rounded-3xl p-4 md:p-8 shadow-xl border border-base-300"
+          >
+            <div class="mermaid-container">
+              <div class="mermaid-controls">
+                <button class="mermaid-control-btn zoom-in" title="放大">
+                  <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="mermaid-control-btn zoom-out" title="缩小">
+                  <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="mermaid-control-btn reset-zoom" title="重置">
+                  <i class="fas fa-expand-arrows-alt"></i>
+                </button>
+                <button class="mermaid-control-btn fullscreen" title="全屏查看">
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+              <div class="mermaid" id="mermaid-diagram">
+                graph TD A["Social Networks"] --> B["Friend Recommendations"]
+                C["Navigation Systems"] --> D["Shortest Path"] E["Computer
+                Networks"] --> F["Routing Optimization"] G["Scheduling"] -->
+                H["Task Dependencies"] I["Biology"] --> J["Protein
+                Interactions"] K["Graph Algorithms"] --> A K --> C K --> E K -->
+                G K --> I style K
+                fill:#047857,stroke:#ffffff,stroke-width:3px,color:#ffffff style
+                A fill:#f3f4f6,stroke:#047857,stroke-width:2px,color:#374151
+                style C
+                fill:#f3f4f6,stroke:#047857,stroke-width:2px,color:#374151 style
+                E fill:#f3f4f6,stroke:#047857,stroke-width:2px,color:#374151
+                style G
+                fill:#f3f4f6,stroke:#047857,stroke-width:2px,color:#374151 style
+                I fill:#f3f4f6,stroke:#047857,stroke-width:2px,color:#374151
+                style B
+                fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#374151 style
+                D fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#374151
+                style F
+                fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#374151 style
+                H fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#374151
+                style J
+                fill:#ffffff,stroke:#d97706,stroke-width:2px,color:#374151
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Graphs Section -->
+      <section id="about-graphs" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              1. About Graph Data Structure
+            </h2>
+
+            <div class="space-y-12">
+              <!-- Definition -->
+              <div class="prose prose-lg max-w-none">
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-6">
+                  1.1 Definition and Basic Terminology
+                </h3>
+                <p class="text-neutral/80 leading-relaxed mb-6">
+                  A <strong>graph</strong> is a non-linear data structure that
+                  consists of a finite set of <strong>vertices</strong> (also
+                  called nodes) and a set of <strong>edges</strong> connecting
+                  these vertices
+                  <a
+                    href="https://www.geeksforgeeks.org/dsa/introduction-to-graphs-data-structure-and-algorithm-tutorials/"
+                    class="text-primary hover:text-secondary underline"
+                    target="_blank"
+                    >[2]</a
+                  >. Formally, a graph G is denoted as G(V, E), where V
+                  represents the set of vertices and E represents the set of
+                  edges.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 my-8">
+                  <div class="bg-base-200 rounded-xl p-6">
+                    <h4 class="font-semibold text-lg text-primary mb-3">
+                      Vertices (Nodes)
+                    </h4>
+                    <p class="text-sm text-neutral/70">
+                      Fundamental units of a graph that can be labeled or
+                      unlabeled. Represent entities in real-world applications.
+                    </p>
+                  </div>
+                  <div class="bg-base-200 rounded-xl p-6">
+                    <h4 class="font-semibold text-lg text-primary mb-3">
+                      Edges (Arcs)
+                    </h4>
+                    <p class="text-sm text-neutral/70">
+                      Connections between vertices that can be directed or
+                      undirected, weighted or unweighted.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Types of Graphs -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  1.2 Types of Graphs
+                </h3>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                  <div class="space-y-6">
+                    <div
+                      class="bg-white border border-base-300 rounded-xl p-6 shadow-sm"
+                    >
+                      <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-arrows-alt-h text-primary"></i>
+                        <h4 class="font-semibold text-lg">Undirected Graphs</h4>
+                      </div>
+                      <p class="text-neutral/70 text-sm mb-3">
+                        Edges have no direction, representing bidirectional
+                        relationships.
+                      </p>
+                      <div
+                        class="text-xs text-primary font-mono bg-base-200 p-2 rounded"
+                      >
+                        Edge(u,v) = Edge(v,u)
+                      </div>
+                    </div>
+
+                    <div
+                      class="bg-white border border-base-300 rounded-xl p-6 shadow-sm"
+                    >
+                      <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-arrow-right text-accent"></i>
+                        <h4 class="font-semibold text-lg">
+                          Directed Graphs (Digraphs)
+                        </h4>
+                      </div>
+                      <p class="text-neutral/70 text-sm mb-3">
+                        Edges have direction, representing one-way
+                        relationships.
+                      </p>
+                      <div
+                        class="text-xs text-accent font-mono bg-base-200 p-2 rounded"
+                      >
+                        Edge u→v ≠ Edge v→u
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="space-y-6">
+                    <div
+                      class="bg-white border border-base-300 rounded-xl p-6 shadow-sm"
+                    >
+                      <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-weight-hanging text-primary"></i>
+                        <h4 class="font-semibold text-lg">Weighted Graphs</h4>
+                      </div>
+                      <p class="text-neutral/70 text-sm mb-3">
+                        Edges have associated numerical values representing
+                        costs, distances, or capacities.
+                      </p>
+                    </div>
+
+                    <div
+                      class="bg-white border border-base-300 rounded-xl p-6 shadow-sm"
+                    >
+                      <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-project-diagram text-accent"></i>
+                        <h4 class="font-semibold text-lg">Special Types</h4>
+                      </div>
+                      <ul class="text-sm text-neutral/70 space-y-1">
+                        <li>
+                          <strong>Complete:</strong> Every pair of vertices
+                          connected
+                        </li>
+                        <li><strong>Tree:</strong> Connected acyclic graph</li>
+                        <li>
+                          <strong>Bipartite:</strong> Two disjoint vertex sets
+                        </li>
+                        <li><strong>DAG:</strong> Directed Acyclic Graph</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-World Applications -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  1.3 Real-World Applications
+                </h3>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div
+                    class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fab fa-facebook text-2xl text-primary"></i>
+                      <h4 class="font-semibold">Social Networks</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      Users as nodes, friendships as edges. Powers friend
+                      suggestions and community detection
+                      <a
+                        href="https://www.geeksforgeeks.org/dsa/applications-advantages-and-disadvantages-of-graph/"
+                        class="text-primary hover:text-secondary underline"
+                        target="_blank"
+                        >[22]</a
+                      >.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-xl p-6 border border-accent/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fas fa-map-marked-alt text-2xl text-accent"></i>
+                      <h4 class="font-semibold">Navigation Systems</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      Locations as nodes, roads as weighted edges. Dijkstra's
+                      algorithm for shortest paths
+                      <a
+                        href="https://dev.to/kartikmehta8/introduction-to-graph-data-structures-4hna"
+                        class="text-primary hover:text-secondary underline"
+                        target="_blank"
+                        >[21]</a
+                      >.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fas fa-network-wired text-2xl text-primary"></i>
+                      <h4 class="font-semibold">Computer Networks</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      Routers as nodes, connections as edges. Optimizes routing
+                      and analyzes network traffic.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-xl p-6 border border-accent/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fas fa-dna text-2xl text-accent"></i>
+                      <h4 class="font-semibold">Bioinformatics</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      Modeling protein interactions, gene regulatory networks,
+                      and phylogenetic relationships.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fas fa-tasks text-2xl text-primary"></i>
+                      <h4 class="font-semibold">Task Scheduling</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      Tasks as nodes, dependencies as edges. Topological sorting
+                      for task ordering
+                      <a
+                        href="https://www.interviewcake.com/concept/java/topological-sort"
+                        class="text-primary hover:text-secondary underline"
+                        target="_blank"
+                        >[13]</a
+                      >.
+                    </p>
+                  </div>
+
+                  <div
+                    class="bg-gradient-to-br from-accent/5 to-accent/10 rounded-xl p-6 border border-accent/20"
+                  >
+                    <div class="flex items-center space-x-3 mb-4">
+                      <i class="fas fa-thumbs-up text-2xl text-accent"></i>
+                      <h4 class="font-semibold">Recommendation Systems</h4>
+                    </div>
+                    <p class="text-sm text-neutral/70">
+                      "Users who liked this also liked..." patterns discovered
+                      through graph analysis.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Java Representation Section -->
+      <section id="java-representation" class="py-20 bg-base-200">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              2. Graph Representation in Java
+            </h2>
+
+            <div class="space-y-12">
+              <!-- Adjacency List -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-6">
+                  2.1 Adjacency List
+                </h3>
+
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300 mb-6"
+                >
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <h4 class="font-semibold text-lg mb-4 text-primary">
+                        Concept
+                      </h4>
+                      <p class="text-neutral/70 mb-4">
+                        An array of linked lists where each index represents a
+                        vertex and contains a list of its adjacent vertices.
+                      </p>
+
+                      <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-plus-circle text-green-500"></i>
+                          <span class="text-sm"
+                            ><strong>Space Efficient:</strong> O(V + E)</span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-plus-circle text-green-500"></i>
+                          <span class="text-sm"
+                            ><strong>Fast Neighbor Iteration</strong></span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-minus-circle text-red-500"></i>
+                          <span class="text-sm"
+                            ><strong>Slower Edge Lookup:</strong>
+                            O(degree(u))</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <pre
+                          class="text-sm overflow-x-auto"
+                        ><code class="language-java">// Adjacency List Structure
+ArrayList&lt;ArrayList&lt;Integer&gt;&gt; adj = 
+    new ArrayList&lt;&gt;();
+
+// For vertex u, neighbors are:
+for (int v : adj.get(u)) {
+    // Process edge u-v
+}</code></pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-neutral rounded-xl p-6 text-white">
+                  <h5 class="font-semibold mb-3">
+                    Complete Java Implementation
+                  </h5>
+                  <pre
+                    class="text-sm overflow-x-auto"
+                  ><code class="language-java">import java.util.ArrayList;
+
+class Graph {
+    private int V; // Number of vertices
+    private ArrayList&lt;ArrayList&lt;Integer&gt;&gt; adj;
+
+    public Graph(int v) {
+        V = v;
+        adj = new ArrayList&lt;&gt;(v);
+        for (int i = 0; i &lt; v; ++i)
+            adj.add(new ArrayList&lt;&gt;());
+    }
+
+    public void addEdge(int u, int v) {
+        adj.get(u).add(v);
+        adj.get(v).add(u); // Undirected
+    }
+
+    public void printGraph() {
+        for (int i = 0; i &lt; V; i++) {
+            System.out.print("Vertex " + i + ":");
+            for (Integer neighbor : adj.get(i)) {
+                System.out.print(" -&gt; " + neighbor);
+            }
+            System.out.println();
+        }
+    }
+}</code></pre>
+                </div>
+              </div>
+
+              <!-- Adjacency Matrix -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-6">
+                  2.2 Adjacency Matrix
+                </h3>
+
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300 mb-6"
+                >
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <h4 class="font-semibold text-lg mb-4 text-primary">
+                        Concept
+                      </h4>
+                      <p class="text-neutral/70 mb-4">
+                        A 2D array where matrix[u][v] indicates the presence or
+                        weight of an edge between vertices u and v.
+                      </p>
+
+                      <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-plus-circle text-green-500"></i>
+                          <span class="text-sm"
+                            ><strong>Fast Edge Lookup:</strong> O(1)</span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-minus-circle text-red-500"></i>
+                          <span class="text-sm"
+                            ><strong>Space Intensive:</strong> O(V²)</span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-minus-circle text-red-500"></i>
+                          <span class="text-sm"
+                            ><strong>Slower Neighbor Iteration:</strong>
+                            O(V)</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <pre
+                          class="text-sm overflow-x-auto"
+                        ><code class="language-java">// Adjacency Matrix Structure
+int[][] adjMatrix = new int[V][V];
+
+// Check if edge u-v exists:
+if (adjMatrix[u][v] == 1) {
+    // Edge exists
+}</code></pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-neutral rounded-xl p-6 text-white">
+                  <h5 class="font-semibold mb-3">
+                    Complete Java Implementation
+                  </h5>
+                  <pre
+                    class="text-sm overflow-x-auto"
+                  ><code class="language-java">class Graph {
+    private int V;
+    private int[][] adjMatrix;
+
+    public Graph(int v) {
+        V = v;
+        adjMatrix = new int[v][v];
+    }
+
+    public void addEdge(int u, int v) {
+        adjMatrix[u][v] = 1;
+        adjMatrix[v][u] = 1; // Undirected
+    }
+
+    public void printGraph() {
+        for (int i = 0; i &lt; V; i++) {
+            for (int j = 0; j &lt; V; j++) {
+                System.out.print(adjMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}</code></pre>
+                </div>
+              </div>
+
+              <!-- Edge List -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-6">
+                  2.3 Edge List
+                </h3>
+
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+                >
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <h4 class="font-semibold text-lg mb-4 text-primary">
+                        Concept
+                      </h4>
+                      <p class="text-neutral/70 mb-4">
+                        A simple list of all edges, often represented as tuples
+                        (u, v, weight). Most space-efficient but limited
+                        operations.
+                      </p>
+
+                      <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-plus-circle text-green-500"></i>
+                          <span class="text-sm"
+                            ><strong>Most Space Efficient</strong></span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-plus-circle text-green-500"></i>
+                          <span class="text-sm"
+                            ><strong>Simple Construction</strong></span
+                          >
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <i class="fas fa-minus-circle text-red-500"></i>
+                          <span class="text-sm"
+                            ><strong>Slow Queries:</strong> O(E)</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <pre
+                          class="text-sm overflow-x-auto"
+                        ><code class="language-java">// Edge List Structure
+class Edge {
+    int source, dest, weight;
+}
+
+List&lt;Edge&gt; edges = new ArrayList&lt;&gt;();</code></pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Operations Section -->
+      <section id="operations" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              3. Graph Operations and Algorithms
+            </h2>
+
+            <!-- Traversal Algorithms -->
+            <div class="space-y-12">
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  3.1 Traversal Algorithms
+                </h3>
+
+                <!-- BFS -->
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300 mb-8"
+                >
+                  <h4
+                    class="font-serif text-xl font-semibold text-primary mb-6"
+                  >
+                    Breadth-First Search (BFS)
+                  </h4>
+
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <p class="text-neutral/70 mb-4">
+                        Explores graph level by level using a queue. Perfect for
+                        finding shortest paths in unweighted graphs
+                        <a
+                          href="https://medium.com/@chaudharyritesh947/breadth-first-search-bfs-level-order-traversal-in-graphs-d283f9d4e174"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[4]</a
+                        >.
+                      </p>
+
+                      <div class="bg-base-200 rounded-lg p-4 mb-4">
+                        <h5 class="font-semibold mb-2">Key Applications:</h5>
+                        <ul class="text-sm text-neutral/70 space-y-1">
+                          <li>• Shortest path (unweighted graphs)</li>
+                          <li>• Finding connected components</li>
+                          <li>• Checking bipartiteness</li>
+                          <li>• Level-order traversal</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="bg-neutral rounded-lg p-4 text-white">
+                        <pre
+                          class="text-sm overflow-x-auto"
+                        ><code class="language-java">public ArrayList&lt;Integer&gt; bfsOfGraph(int V, 
+    ArrayList&lt;ArrayList&lt;Integer&gt;&gt; adj) {
+    
+    ArrayList&lt;Integer&gt; traversal = new ArrayList&lt;&gt;();
+    boolean[] visited = new boolean[V];
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+    
+    queue.add(0);
+    visited[0] = true;
+    
+    while (!queue.isEmpty()) {
+        int u = queue.poll();
+        traversal.add(u);
+        
+        for (int v : adj.get(u)) {
+            if (!visited[v]) {
+                visited[v] = true;
+                queue.add(v);
+            }
+        }
+    }
+    return traversal;
+}</code></pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DFS -->
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300 mb-8"
+                >
+                  <h4
+                    class="font-serif text-xl font-semibold text-primary mb-6"
+                  >
+                    Depth-First Search (DFS)
+                  </h4>
+
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <p class="text-neutral/70 mb-4">
+                        Explores as far as possible along each branch before
+                        backtracking. Uses recursion or explicit stack.
+                        <a
+                          href="https://www.geeksforgeeks.org/dsa/why-is-the-complexity-of-both-bfs-and-dfs-ove/"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[5]</a
+                        >
+                      </p>
+
+                      <div class="bg-base-200 rounded-lg p-4 mb-4">
+                        <h5 class="font-semibold mb-2">Key Applications:</h5>
+                        <ul class="text-sm text-neutral/70 space-y-1">
+                          <li>• Cycle detection</li>
+                          <li>• Topological sorting (DAGs)</li>
+                          <li>• Finding strongly connected components</li>
+                          <li>• Pathfinding with constraints</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="bg-neutral rounded-lg p-4 text-white">
+                        <pre
+                          class="text-sm overflow-x-auto"
+                        ><code class="language-java">public ArrayList&lt;Integer&gt; dfsOfGraph(int V, 
+    ArrayList&lt;ArrayList&lt;Integer&gt;&gt; adj) {
+    
+    boolean[] visited = new boolean[V];
+    ArrayList&lt;Integer&gt; traversal = new ArrayList&lt;&gt;();
+    dfsUtil(0, visited, adj, traversal);
+    return traversal;
+}
+
+private void dfsUtil(int u, boolean[] visited, 
+    ArrayList&lt;ArrayList&lt;Integer&gt;&gt; adj, 
+    ArrayList&lt;Integer&gt; traversal) {
+    
+    visited[u] = true;
+    traversal.add(u);
+    
+    for (int v : adj.get(u)) {
+        if (!visited[v]) {
+            dfsUtil(v, visited, adj, traversal);
+        }
+    }
+}</code></pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shortest Path Algorithms -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  3.2 Shortest Path Algorithms
+                </h3>
+
+                <!-- Dijkstra's -->
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300 mb-8"
+                >
+                  <h4 class="font-serif text-xl font-semibold text-accent mb-6">
+                    Dijkstra's Algorithm
+                  </h4>
+
+                  <div class="mb-6">
+                    <div
+                      class="bg-accent/10 border border-accent/20 rounded-lg p-4"
+                    >
+                      <p class="text-sm text-neutral/70">
+                        <strong>Concept:</strong> Greedy algorithm for finding
+                        shortest paths from a single source in graphs with
+                        non-negative edge weights
+                        <a
+                          href="https://algs4.cs.princeton.edu/44sp/"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[7]</a
+                        >. Uses priority queue to select the next vertex with
+                        minimum distance.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <h5 class="font-semibold mb-2">Key Properties:</h5>
+                        <ul class="text-sm text-neutral/70 space-y-1">
+                          <li>
+                            • <strong>Time:</strong> O((V+E) log V) with binary
+                            heap
+                          </li>
+                          <li>• <strong>Space:</strong> O(V)</li>
+                          <li>
+                            • <strong>Requirement:</strong> No negative edge
+                            weights
+                          </li>
+                          <li>
+                            • <strong>Optimal:</strong> Guarantees shortest
+                            paths
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="bg-neutral rounded-lg p-4 text-white">
+                      <pre
+                        class="text-xs overflow-x-auto"
+                      ><code class="language-java">// Core Logic Structure
+PriorityQueue&lt;VertexDist&gt; pq = new PriorityQueue&lt;&gt;();
+pq.add(new VertexDist(source, 0));
+distTo[source] = 0;
+
+while (!pq.isEmpty()) {
+    int u = pq.poll().vertex;
+    
+    for (DirectedEdge e : graph.adj(u)) {
+        int v = e.to();
+        // Relaxation
+        if (distTo[v] > distTo[u] + e.weight()) {
+            distTo[v] = distTo[u] + e.weight();
+            pq.add(new VertexDist(v, distTo[v]));
+        }
+    }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bellman-Ford -->
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+                >
+                  <h4 class="font-serif text-xl font-semibold text-accent mb-6">
+                    Bellman-Ford Algorithm
+                  </h4>
+
+                  <div class="mb-6">
+                    <div
+                      class="bg-accent/10 border border-accent/20 rounded-lg p-4"
+                    >
+                      <p class="text-sm text-neutral/70">
+                        <strong>Concept:</strong> Handles graphs with negative
+                        edge weights and detects negative cycles. Relaxes all
+                        edges V-1 times
+                        <a
+                          href="https://notes.iamdev.in/simple-java-program-for-bellman-ford-algorithm/"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[37]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <h5 class="font-semibold mb-2">Key Properties:</h5>
+                        <ul class="text-sm text-neutral/70 space-y-1">
+                          <li>• <strong>Time:</strong> O(V*E)</li>
+                          <li>• <strong>Space:</strong> O(V)</li>
+                          <li>
+                            • <strong>Capability:</strong> Handles negative
+                            weights
+                          </li>
+                          <li>
+                            • <strong>Detection:</strong> Finds negative cycles
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="bg-neutral rounded-lg p-4 text-white">
+                      <pre
+                        class="text-xs overflow-x-auto"
+                      ><code class="language-java">// Core Logic Structure
+for (int i = 0; i < V - 1; i++) {
+    for (Edge e : edges) {
+        int u = e.source;
+        int v = e.dest;
+        int weight = e.weight;
+        
+        // Relaxation
+        if (dist[u] != Integer.MAX_VALUE && 
+            dist[v] > dist[u] + weight) {
+            dist[v] = dist[u] + weight;
+        }
+    }
+}
+
+// Check for negative cycles
+for (Edge e : edges) {
+    if (dist[e.source] != Integer.MAX_VALUE && 
+        dist[e.dest] > dist[e.source] + e.weight) {
+        // Negative cycle detected
+    }
+}</code></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MST Algorithms -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  3.3 Minimum Spanning Tree Algorithms
+                </h3>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                  <!-- Kruskal's -->
+                  <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                  >
+                    <h4
+                      class="font-serif text-lg font-semibold text-primary mb-4"
+                    >
+                      Kruskal's Algorithm
+                    </h4>
+
+                    <div class="space-y-4">
+                      <p class="text-sm text-neutral/70">
+                        Sorts all edges and adds them to MST if they don't form
+                        a cycle. Uses Union-Find data structure
+                        <a
+                          href="https://www.geeksforgeeks.org/dsa/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[10]</a
+                        >.
+                      </p>
+
+                      <div class="bg-base-200 rounded-lg p-3">
+                        <h5 class="font-semibold text-xs mb-2">
+                          Algorithm Steps:
+                        </h5>
+                        <ol class="text-xs text-neutral/70 space-y-1">
+                          <li>1. Sort all edges by weight</li>
+                          <li>2. Initialize Union-Find structure</li>
+                          <li>
+                            3. Add edges in order if they don't create cycles
+                          </li>
+                          <li>4. Stop when V-1 edges are added</li>
+                        </ol>
+                      </div>
+
+                      <div class="text-xs space-y-1">
+                        <div><strong>Time:</strong> O(E log E)</div>
+                        <div><strong>Best for:</strong> Sparse graphs</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Prim's -->
+                  <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                  >
+                    <h4
+                      class="font-serif text-lg font-semibold text-primary mb-4"
+                    >
+                      Prim's Algorithm
+                    </h4>
+
+                    <div class="space-y-4">
+                      <p class="text-sm text-neutral/70">
+                        Grows MST from a starting vertex, always adding the
+                        minimum-weight edge that connects to the growing tree
+                        <a
+                          href="https://medium.com/@ys.yogendra22/prims-algorithm-in-graphs-minimum-spanning-tree-18f33e037359"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[11]</a
+                        >.
+                      </p>
+
+                      <div class="bg-base-200 rounded-lg p-3">
+                        <h5 class="font-semibold text-xs mb-2">
+                          Algorithm Steps:
+                        </h5>
+                        <ol class="text-xs text-neutral/70 space-y-1">
+                          <li>1. Start with any vertex</li>
+                          <li>2. Maintain priority queue of edges</li>
+                          <li>
+                            3. Add minimum edge that connects to new vertex
+                          </li>
+                          <li>4. Repeat until all vertices are included</li>
+                        </ol>
+                      </div>
+
+                      <div class="text-xs space-y-1">
+                        <div><strong>Time:</strong> O(E log V)</div>
+                        <div><strong>Best for:</strong> Dense graphs</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Topological Sorting -->
+              <div>
+                <h3 class="font-serif text-2xl font-semibold text-neutral mb-8">
+                  3.4 Topological Sorting
+                </h3>
+
+                <div
+                  class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+                >
+                  <p class="text-neutral/70 mb-6">
+                    Linear ordering of vertices in a Directed Acyclic Graph
+                    (DAG) where for every edge u → v, u appears before v in the
+                    ordering
+                    <a
+                      href="https://www.interviewcake.com/concept/java/topological-sort"
+                      class="text-primary hover:text-secondary underline"
+                      target="_blank"
+                      >[13]</a
+                    >.
+                  </p>
+
+                  <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                      <h4 class="font-semibold text-lg mb-4">
+                        Kahn's Algorithm (BFS-based)
+                      </h4>
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <pre
+                          class="text-xs overflow-x-auto"
+                        ><code class="language-java">// Calculate in-degrees
+Map&lt;String, Integer&gt; indegrees = new HashMap&lt;&gt;();
+
+// Find nodes with 0 in-degree
+Queue&lt;String&gt; queue = new ArrayDeque&lt;&gt;();
+
+// Process nodes
+while (!queue.isEmpty()) {
+    String node = queue.poll();
+    topologicalOrder.add(node);
+    
+    // Decrement in-degrees of neighbors
+    for (String neighbor : graph.get(node)) {
+        indegrees.put(neighbor, indegrees.get(neighbor) - 1);
+        if (indegrees.get(neighbor) == 0) {
+            queue.add(neighbor);
+        }
+    }
+}</code></pre>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 class="font-semibold text-lg mb-4">
+                        DFS-based Approach
+                      </h4>
+                      <div class="bg-base-200 rounded-lg p-4">
+                        <pre
+                          class="text-xs overflow-x-auto"
+                        ><code class="language-java">// Standard DFS with stack
+void topologicalSortUtil(int v, boolean[] visited, 
+    Stack&lt;Integer&gt; stack) {
+    
+    visited[v] = true;
+    
+    // Recur for all adjacent vertices
+    for (Integer i : adj.get(v)) {
+        if (!visited[i]) {
+            topologicalSortUtil(i, visited, stack);
+        }
+    }
+    
+    // Push current vertex to stack
+    stack.push(v);
+}</code></pre>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="mt-6 bg-primary/10 border border-primary/20 rounded-lg p-4"
+                  >
+                    <h5 class="font-semibold mb-2">Applications:</h5>
+                    <ul class="text-sm text-neutral/70 space-y-1">
+                      <li>• Task scheduling with dependencies</li>
+                      <li>• Course prerequisite ordering</li>
+                      <li>• Build system dependency resolution</li>
+                      <li>• Symbol dependency resolution in linkers</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Time Complexity Section -->
+      <section id="time-complexity" class="py-20 bg-base-200">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              4. Time Complexity of Graph Operations
+            </h2>
+
+            <div class="space-y-8">
+              <!-- Explanation -->
+              <div
+                class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+              >
+                <h3 class="font-serif text-xl font-semibold text-neutral mb-4">
+                  Understanding Graph Algorithm Complexities
+                </h3>
+                <p class="text-neutral/70 mb-6">
+                  The efficiency of graph algorithms depends on the graph
+                  representation and the algorithm's approach. Here's a
+                  breakdown of the most important operations
+                  <a
+                    href="https://www.numberanalytics.com/blog/graph-algorithms-logic-and-complexity"
+                    class="text-primary hover:text-secondary underline"
+                    target="_blank"
+                    >[28]</a
+                  >.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-primary mb-2">
+                      Adjacency List
+                    </h4>
+                    <ul class="text-sm text-neutral/70 space-y-1">
+                      <li>• <strong>Space:</strong> O(V + E)</li>
+                      <li>• <strong>Edge Check:</strong> O(degree(u))</li>
+                      <li>
+                        • <strong>Neighbor Iteration:</strong> O(degree(u))
+                      </li>
+                      <li>• <strong>Best for:</strong> Sparse graphs</li>
+                    </ul>
+                  </div>
+
+                  <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-primary mb-2">
+                      Adjacency Matrix
+                    </h4>
+                    <ul class="text-sm text-neutral/70 space-y-1">
+                      <li>• <strong>Space:</strong> O(V²)</li>
+                      <li>• <strong>Edge Check:</strong> O(1)</li>
+                      <li>• <strong>Neighbor Iteration:</strong> O(V)</li>
+                      <li>• <strong>Best for:</strong> Dense graphs</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Complexity Table -->
+              <div
+                class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+              >
+                <h3 class="font-serif text-xl font-semibold text-neutral mb-6">
+                  Complexity Summary Table
+                </h3>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="border-b border-base-300">
+                        <th class="text-left py-3 px-4 font-semibold">
+                          Algorithm
+                        </th>
+                        <th class="text-left py-3 px-4 font-semibold">
+                          Time Complexity
+                        </th>
+                        <th class="text-left py-3 px-4 font-semibold">
+                          Space Complexity
+                        </th>
+                        <th class="text-left py-3 px-4 font-semibold">
+                          Key Applications
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-neutral/80">
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">BFS</td>
+                        <td class="py-3 px-4">O(V + E)</td>
+                        <td class="py-3 px-4">O(V)</td>
+                        <td class="py-3 px-4">
+                          Unweighted shortest paths, connectivity
+                        </td>
+                      </tr>
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">DFS</td>
+                        <td class="py-3 px-4">O(V + E)</td>
+                        <td class="py-3 px-4">O(V)</td>
+                        <td class="py-3 px-4">
+                          Cycle detection, topological sort
+                        </td>
+                      </tr>
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">Dijkstra's</td>
+                        <td class="py-3 px-4">O((V+E) log V)</td>
+                        <td class="py-3 px-4">O(V)</td>
+                        <td class="py-3 px-4">Non-negative shortest paths</td>
+                      </tr>
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">Bellman-Ford</td>
+                        <td class="py-3 px-4">O(V*E)</td>
+                        <td class="py-3 px-4">O(V)</td>
+                        <td class="py-3 px-4">
+                          Negative weights, cycle detection
+                        </td>
+                      </tr>
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">Kruskal's (MST)</td>
+                        <td class="py-3 px-4">O(E log E)</td>
+                        <td class="py-3 px-4">O(E + V)</td>
+                        <td class="py-3 px-4">Minimum spanning trees</td>
+                      </tr>
+                      <tr class="border-b border-base-300">
+                        <td class="py-3 px-4 font-medium">Prim's (MST)</td>
+                        <td class="py-3 px-4">O(E log V)</td>
+                        <td class="py-3 px-4">O(E + V)</td>
+                        <td class="py-3 px-4">Minimum spanning trees</td>
+                      </tr>
+                      <tr>
+                        <td class="py-3 px-4 font-medium">Topological Sort</td>
+                        <td class="py-3 px-4">O(V + E)</td>
+                        <td class="py-3 px-4">O(V)</td>
+                        <td class="py-3 px-4">DAG linear ordering</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Detailed Breakdown -->
+              <div class="grid lg:grid-cols-2 gap-8">
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <h4
+                    class="font-serif text-lg font-semibold text-primary mb-4"
+                  >
+                    Traversal Algorithms
+                  </h4>
+                  <div class="space-y-3 text-sm text-neutral/70">
+                    <div>
+                      <strong>BFS & DFS:</strong> Both algorithms visit each
+                      vertex once and each edge once, resulting in O(V + E) time
+                      complexity. The space complexity is O(V) for the visited
+                      array and queue/stack storage
+                      <a
+                        href="https://www.geeksforgeeks.org/dsa/why-is-the-complexity-of-both-bfs-and-dfs-ove/"
+                        class="text-primary hover:text-secondary underline"
+                        target="_blank"
+                        >[5]</a
+                      >.
+                    </div>
+                    <div>
+                      For adjacency matrix representation, checking all
+                      neighbors takes O(V) time per vertex, leading to O(V²)
+                      overall complexity.
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <h4 class="font-serif text-lg font-semibold text-accent mb-4">
+                    Shortest Path Algorithms
+                  </h4>
+                  <div class="space-y-3 text-sm text-neutral/70">
+                    <div>
+                      <strong>Dijkstra's:</strong> The priority queue operations
+                      dominate the complexity. Each vertex is inserted/extracted
+                      once (V log V), and each edge may cause a priority update
+                      (E log V).
+                    </div>
+                    <div>
+                      <strong>Bellman-Ford:</strong> Performs V-1 passes over
+                      all E edges, resulting in O(V*E) complexity. The
+                      queue-based optimization (SPFA) has the same worst-case
+                      bound.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Patterns Section -->
+      <section id="patterns" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              5. Common Graph Problem Patterns
+            </h2>
+
+            <div class="space-y-12">
+              <!-- Pattern Overview -->
+              <div
+                class="bg-white rounded-xl p-8 shadow-lg border border-base-300"
+              >
+                <h3 class="font-serif text-xl font-semibold text-neutral mb-6">
+                  Recognizing Graph Problem Patterns
+                </h3>
+                <p class="text-neutral/70 mb-6">
+                  Many graph problems fall into recognizable patterns that map
+                  to specific algorithms or combinations of techniques
+                  <a
+                    href="https://www.linkedin.com/posts/parikh-jain-79568798_90-of-all-graph-problems-you-will-ever-face-activity-7335521716690976768-KXH9"
+                    class="text-primary hover:text-secondary underline"
+                    target="_blank"
+                    >[31]</a
+                  >. Identifying these patterns is crucial for efficient
+                  problem-solving.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-primary mb-2">
+                      Problem Characteristics
+                    </h4>
+                    <ul class="text-sm text-neutral/70 space-y-1">
+                      <li>• "Find the shortest path..."</li>
+                      <li>• "Connect all nodes with minimum cost..."</li>
+                      <li>• "Detect cycles or dependencies..."</li>
+                      <li>• "Find connected components..."</li>
+                      <li>• "Schedule tasks with prerequisites..."</li>
+                    </ul>
+                  </div>
+
+                  <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-accent mb-2">
+                      Algorithm Mapping
+                    </h4>
+                    <ul class="text-sm text-neutral/70 space-y-1">
+                      <li>• Shortest path → BFS/Dijkstra's/Bellman-Ford</li>
+                      <li>• Minimum connection → MST algorithms</li>
+                      <li>• Dependency ordering → Topological sort</li>
+                      <li>• Connectivity → DFS/BFS traversal</li>
+                      <li>• Negative cycles → Bellman-Ford</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Detailed Patterns -->
+              <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Pattern 1 -->
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-route text-2xl text-primary"></i>
+                    <h4 class="font-serif text-lg font-semibold">
+                      Traversal & Search Patterns
+                    </h4>
+                  </div>
+                  <p class="text-sm text-neutral/70 mb-4">
+                    Problems requiring systematic exploration of the graph
+                    structure.
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="bg-base-200 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        BFS Applications
+                      </h5>
+                      <ul class="text-xs text-neutral/70 space-y-1">
+                        <li>• Shortest path in unweighted graphs</li>
+                        <li>• Level-order exploration</li>
+                        <li>• Connected components</li>
+                        <li>• Bipartite graph checking</li>
+                      </ul>
+                    </div>
+
+                    <div class="bg-base-200 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        DFS Applications
+                      </h5>
+                      <ul class="text-xs text-neutral/70 space-y-1">
+                        <li>• Cycle detection</li>
+                        <li>• Pathfinding with constraints</li>
+                        <li>• Strongly connected components</li>
+                        <li>• Topological sorting</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pattern 2 -->
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-bullseye text-2xl text-accent"></i>
+                    <h4 class="font-serif text-lg font-semibold">
+                      Shortest Path Problems
+                    </h4>
+                  </div>
+                  <p class="text-sm text-neutral/70 mb-4">
+                    Optimization problems seeking minimum cost paths between
+                    vertices.
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="bg-accent/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Unweighted Graphs
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Use BFS for O(V + E) time complexity
+                      </p>
+                    </div>
+
+                    <div class="bg-accent/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Weighted (Non-negative)
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Dijkstra's algorithm with O((V+E) log V) complexity
+                      </p>
+                    </div>
+
+                    <div class="bg-accent/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Weighted (Negative edges)
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Bellman-Ford algorithm with O(V*E) complexity
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pattern 3 -->
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-project-diagram text-2xl text-primary"></i>
+                    <h4 class="font-serif text-lg font-semibold">
+                      Minimum Spanning Tree
+                    </h4>
+                  </div>
+                  <p class="text-sm text-neutral/70 mb-4">
+                    Problems involving connecting all vertices with minimum
+                    total edge weight.
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="bg-primary/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Kruskal's Algorithm
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Sort edges, use Union-Find. Best for sparse graphs.
+                      </p>
+                    </div>
+
+                    <div class="bg-primary/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Prim's Algorithm
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Grow tree from node, use priority queue. Best for dense
+                        graphs.
+                      </p>
+                    </div>
+
+                    <div class="bg-primary/5 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">Applications</h5>
+                      <ul class="text-xs text-neutral/70 space-y-1">
+                        <li>• Network design</li>
+                        <li>• Cluster analysis</li>
+                        <li>• Approximation algorithms</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pattern 4 -->
+                <div
+                  class="bg-white rounded-xl p-6 shadow-lg border border-base-300"
+                >
+                  <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-sort-amount-down text-2xl text-accent"></i>
+                    <h4 class="font-serif text-lg font-semibold">
+                      Topological Sorting
+                    </h4>
+                  </div>
+                  <p class="text-sm text-neutral/70 mb-4">
+                    Linear ordering problems in directed acyclic graphs (DAGs).
+                  </p>
+
+                  <div class="space-y-3">
+                    <div class="bg-accent/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        Kahn's Algorithm
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        BFS-based with in-degree counting
+                      </p>
+                    </div>
+
+                    <div class="bg-accent/10 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">
+                        DFS-based Approach
+                      </h5>
+                      <p class="text-xs text-neutral/70">
+                        Uses recursion stack for ordering
+                      </p>
+                    </div>
+
+                    <div class="bg-accent/5 rounded-lg p-3">
+                      <h5 class="font-semibold text-xs mb-1">Applications</h5>
+                      <ul class="text-xs text-neutral/70 space-y-1">
+                        <li>• Task scheduling</li>
+                        <li>• Build systems</li>
+                        <li>• Course prerequisites</li>
+                        <li>• Dependency resolution</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Problem-Solving Strategy -->
+              <div
+                class="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-8 border border-primary/20"
+              >
+                <h3 class="font-serif text-xl font-semibold text-neutral mb-6">
+                  Problem-Solving Strategy
+                </h3>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                  <div class="text-center">
+                    <div
+                      class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3"
+                    >
+                      <span class="font-bold">1</span>
+                    </div>
+                    <h4 class="font-semibold text-sm mb-2">
+                      Analyze the Problem
+                    </h4>
+                    <p class="text-xs text-neutral/70">
+                      Identify keywords, constraints, and desired output.
+                      Determine if it's a graph problem.
+                    </p>
+                  </div>
+
+                  <div class="text-center">
+                    <div
+                      class="bg-accent text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3"
+                    >
+                      <span class="font-bold">2</span>
+                    </div>
+                    <h4 class="font-semibold text-sm mb-2">
+                      Choose Representation
+                    </h4>
+                    <p class="text-xs text-neutral/70">
+                      Select adjacency list or matrix based on graph density and
+                      required operations.
+                    </p>
+                  </div>
+
+                  <div class="text-center">
+                    <div
+                      class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3"
+                    >
+                      <span class="font-bold">3</span>
+                    </div>
+                    <h4 class="font-semibold text-sm mb-2">Apply Algorithm</h4>
+                    <p class="text-xs text-neutral/70">
+                      Match the problem pattern to the appropriate algorithm and
+                      implement it efficiently.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advantages Section -->
+      <section id="advantages" class="py-20 bg-base-200">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-12">
+              6. Advantages and Disadvantages
+            </h2>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+              <!-- Advantages -->
+              <div
+                class="bg-white rounded-xl p-8 shadow-lg border border-green-200"
+              >
+                <div class="flex items-center space-x-3 mb-6">
+                  <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                  <h3 class="font-serif text-xl font-semibold text-green-700">
+                    Advantages
+                  </h3>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-network-wired text-green-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">
+                        Modeling Relationships
+                      </h4>
+                      <p class="text-xs text-neutral/70">
+                        Graphs excel at representing complex relationships and
+                        networks between entities, making them intuitive for
+                        real-world problems like social networks and maps
+                        <a
+                          href="https://www.iquanta.in/blog/graph-data-structure-its-types-and-representation/"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[3]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-cogs text-green-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">Versatility</h4>
+                      <p class="text-xs text-neutral/70">
+                        Can model various systems with different properties
+                        (directed/undirected, weighted/unweighted) and adapt to
+                        specific needs.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-brain text-green-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">Algorithmic Power</h4>
+                      <p class="text-xs text-neutral/70">
+                        Rich collection of algorithms for traversal, shortest
+                        paths, network flow, and connectivity problems
+                        <a
+                          href="https://www.linkedin.com/posts/parikh-jain-79568798_90-of-all-graph-problems-you-will-ever-face-activity-7335521716690976768-KXH9"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[31]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i
+                      class="fas fa-compress-arrows-alt text-green-500 mt-1"
+                    ></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">
+                        Flexible Representation
+                      </h4>
+                      <p class="text-xs text-neutral/70">
+                        Multiple representation options (adjacency list, matrix,
+                        edge list) allow optimization based on operations and
+                        graph density
+                        <a
+                          href="https://www.baeldung.com/cs/graphs"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[80]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-expand text-green-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">Scalability</h4>
+                      <p class="text-xs text-neutral/70">
+                        Adjacency list representation is space-efficient for
+                        sparse graphs where edges are much fewer than V²
+                        <a
+                          href="https://medium.com/@rushikeshapc410/graph-for-beginners-a-comprehensive-guide-with-patterns-problems-and-sample-solutions-1187fe12e1fc"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[69]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Disadvantages -->
+              <div
+                class="bg-white rounded-xl p-8 shadow-lg border border-red-200"
+              >
+                <div class="flex items-center space-x-3 mb-6">
+                  <i
+                    class="fas fa-exclamation-triangle text-2xl text-red-500"
+                  ></i>
+                  <h3 class="font-serif text-xl font-semibold text-red-700">
+                    Disadvantages
+                  </h3>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-puzzle-piece text-red-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">Complexity</h4>
+                      <p class="text-xs text-neutral/70">
+                        Graph algorithms can be complex to understand and
+                        implement correctly, especially advanced ones with
+                        multiple components.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-memory text-red-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">Space Overhead</h4>
+                      <p class="text-xs text-neutral/70">
+                        Adjacency matrices require O(V²) space, which can be
+                        prohibitive for large graphs. Even adjacency lists have
+                        overhead for pointers
+                        <a
+                          href="https://medium.com/@rushikeshapc410/graph-for-beginners-a-comprehensive-guide-with-patterns-problems-and-sample-solutions-1187fe12e1fc"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[69]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-tachometer-alt text-red-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">
+                        Performance Bottlenecks
+                      </h4>
+                      <p class="text-xs text-neutral/70">
+                        Certain operations can be slow: edge existence checks in
+                        adjacency lists (O(degree(V))) and neighbor iteration in
+                        matrices (O(V))
+                        <a
+                          href="https://www.baeldung.com/cs/graphs"
+                          class="text-primary hover:text-secondary underline"
+                          target="_blank"
+                          >[80]</a
+                        >.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-bug text-red-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">
+                        Debugging Difficulty
+                      </h4>
+                      <p class="text-xs text-neutral/70">
+                        Debugging graph algorithms can be challenging due to
+                        non-linear nature and potentially large scale of data
+                        structures.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start space-x-3">
+                    <i class="fas fa-hammer text-red-500 mt-1"></i>
+                    <div>
+                      <h4 class="font-semibold text-sm">
+                        Overkill for Simple Problems
+                      </h4>
+                      <p class="text-xs text-neutral/70">
+                        For simpler relationships handled by arrays, lists, or
+                        trees, using graphs might introduce unnecessary
+                        complexity.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Decision Framework -->
+            <div
+              class="mt-12 bg-white rounded-xl p-8 shadow-lg border border-base-300"
+            >
+              <h3
+                class="font-serif text-xl font-semibold text-neutral mb-6 text-center"
+              >
+                When to Use Graph Data Structures
+              </h3>
+
+              <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                  <h4 class="font-semibold text-primary text-center mb-4">
+                    ✓ Good Use Cases
+                  </h4>
+                  <ul class="space-y-2 text-sm text-neutral/70">
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check text-green-500"></i>
+                      <span>Modeling network relationships</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check text-green-500"></i>
+                      <span>Pathfinding and routing problems</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check text-green-500"></i>
+                      <span>Dependency resolution</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check text-green-500"></i>
+                      <span>Social network analysis</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-check text-green-500"></i>
+                      <span>Recommendation systems</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="space-y-4">
+                  <h4 class="font-semibold text-accent text-center mb-4">
+                    ✗ Poor Use Cases
+                  </h4>
+                  <ul class="space-y-2 text-sm text-neutral/70">
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-times text-red-500"></i>
+                      <span>Simple linear relationships</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-times text-red-500"></i>
+                      <span>Tabular data without connections</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-times text-red-500"></i>
+                      <span>When tree structures suffice</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-times text-red-500"></i>
+                      <span>Memory-constrained environments</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                      <i class="fas fa-times text-red-500"></i>
+                      <span>When O(1) random access is critical</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-neutral text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12">
+          <div class="max-w-4xl">
+            <div class="grid md:grid-cols-3 gap-8">
+              <div>
+                <h4 class="font-serif text-lg font-semibold mb-4">
+                  Key Takeaways
+                </h4>
+                <ul class="text-sm space-y-2 text-gray-300">
+                  <li>• Graphs model complex relationships</li>
+                  <li>• Choose representation based on operations</li>
+                  <li>• Match algorithms to problem patterns</li>
+                  <li>• Consider time and space complexity</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-serif text-lg font-semibold mb-4">
+                  Further Reading
+                </h4>
+                <ul class="text-sm space-y-2 text-gray-300">
+                  <li>• Advanced Graph Algorithms</li>
+                  <li>• Network Flow Problems</li>
+                  <li>• Graph Theory Applications</li>
+                  <li>• Dynamic Graph Algorithms</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-serif text-lg font-semibold mb-4">
+                  Practice Problems
+                </h4>
+                <ul class="text-sm space-y-2 text-gray-300">
+                  <li>• Shortest Path Variations</li>
+                  <li>• Connectivity Problems</li>
+                  <li>• Cycle Detection</li>
+                  <li>• Minimum Spanning Trees</li>
+                </ul>
+              </div>
+            </div>
+
+            <div
+              class="border-t border-gray-600 mt-8 pt-8 text-center text-sm text-gray-400"
+            >
+              <p>
+                Comprehensive guide to graph data structures and algorithms •
+                2025
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // Toggle TOC on small screens
+      const tocToggle = document.getElementById("toc-toggle");
+      const toc = document.getElementById("toc");
+      const main = document.querySelector("main");
+
+      tocToggle.addEventListener("click", () => {
+        toc.classList.toggle("-translate-x-full");
+        // Adjust main content margin when TOC is visible on small screens
+        if (window.innerWidth < 1024) {
+          if (toc.classList.contains("-translate-x-full")) {
+            main.classList.remove("ml-80");
+          } else {
+            main.classList.add("ml-80");
+          }
+        }
+      });
+
+      // Close TOC when clicking on a link (small screens)
+      document.querySelectorAll("#toc a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth < 1024) {
+            toc.classList.add("-translate-x-full");
+            main.classList.remove("ml-80");
+          }
+        });
+      });
+
+      // Reset layout on window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 1024) {
+          toc.classList.remove("-translate-x-full");
+          main.classList.add("ml-80");
+        } else {
+          toc.classList.add("-translate-x-full");
+          main.classList.remove("ml-80");
+        }
+      });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Highlight active section in TOC
+      window.addEventListener("scroll", () => {
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll('#toc a[href^="#"]');
+
+        let current = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("bg-primary", "text-white");
+          if (link.getAttribute("href") === `#${current}`) {
+            link.classList.add("bg-primary", "text-white");
+          }
+        });
+      });
+
+      // Initialize Mermaid
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          primaryColor: "#047857",
+          primaryTextColor: "#ffffff",
+          primaryBorderColor: "#065f46",
+          lineColor: "#374151",
+          secondaryColor: "#d97706",
+          tertiaryColor: "#f3f4f6",
+          background: "#ffffff",
+          mainBkg: "#047857",
+          secondBkg: "#d97706",
+          tertiaryBkg: "#f3f4f6",
+        },
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+        },
+      });
+
+      // Initialize Mermaid Controls for zoom and pan
+      function initializeMermaidControls() {
+        const containers = document.querySelectorAll(".mermaid-container");
+
+        containers.forEach((container) => {
+          const mermaidElement = container.querySelector(".mermaid");
+          let scale = 1;
+          let isDragging = false;
+          let startX,
+            startY,
+            translateX = 0,
+            translateY = 0;
+
+          // 触摸相关状态
+          let isTouch = false;
+          let touchStartTime = 0;
+          let initialDistance = 0;
+          let initialScale = 1;
+          let isPinching = false;
+
+          // Zoom controls
+          const zoomInBtn = container.querySelector(".zoom-in");
+          const zoomOutBtn = container.querySelector(".zoom-out");
+          const resetBtn = container.querySelector(".reset-zoom");
+          const fullscreenBtn = container.querySelector(".fullscreen");
+
+          function updateTransform() {
+            mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+            if (scale > 1) {
+              container.classList.add("zoomed");
+            } else {
+              container.classList.remove("zoomed");
+            }
+
+            mermaidElement.style.cursor = isDragging ? "grabbing" : "grab";
+          }
+
+          if (zoomInBtn) {
+            zoomInBtn.addEventListener("click", () => {
+              scale = Math.min(scale * 1.25, 4);
+              updateTransform();
+            });
+          }
+
+          if (zoomOutBtn) {
+            zoomOutBtn.addEventListener("click", () => {
+              scale = Math.max(scale / 1.25, 0.3);
+              if (scale <= 1) {
+                translateX = 0;
+                translateY = 0;
+              }
+              updateTransform();
+            });
+          }
+
+          if (resetBtn) {
+            resetBtn.addEventListener("click", () => {
+              scale = 1;
+              translateX = 0;
+              translateY = 0;
+              updateTransform();
+            });
+          }
+
+          if (fullscreenBtn) {
+            fullscreenBtn.addEventListener("click", () => {
+              if (container.requestFullscreen) {
+                container.requestFullscreen();
+              } else if (container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
+              } else if (container.msRequestFullscreen) {
+                container.msRequestFullscreen();
+              }
+            });
+          }
+
+          // Mouse Events
+          mermaidElement.addEventListener("mousedown", (e) => {
+            if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            mermaidElement.style.cursor = "grabbing";
+            updateTransform();
+            e.preventDefault();
+          });
+
+          document.addEventListener("mousemove", (e) => {
+            if (isDragging && !isTouch) {
+              translateX = e.clientX - startX;
+              translateY = e.clientY - startY;
+              updateTransform();
+            }
+          });
+
+          document.addEventListener("mouseup", () => {
+            if (isDragging && !isTouch) {
+              isDragging = false;
+              mermaidElement.style.cursor = "grab";
+              updateTransform();
+            }
+          });
+
+          document.addEventListener("mouseleave", () => {
+            if (isDragging && !isTouch) {
+              isDragging = false;
+              mermaidElement.style.cursor = "grab";
+              updateTransform();
+            }
+          });
+
+          // 获取两点之间的距离
+          function getTouchDistance(touch1, touch2) {
+            return Math.hypot(
+              touch2.clientX - touch1.clientX,
+              touch2.clientY - touch1.clientY
+            );
+          }
+
+          // Touch Events - 触摸事件处理
+          mermaidElement.addEventListener(
+            "touchstart",
+            (e) => {
+              isTouch = true;
+              touchStartTime = Date.now();
+
+              if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+              } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+              }
+
+              e.preventDefault();
+            },
+            { passive: false }
+          );
+
+          mermaidElement.addEventListener(
+            "touchmove",
+            (e) => {
+              if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+              } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                  const newScale = Math.min(
+                    Math.max(
+                      initialScale * (currentDistance / initialDistance),
+                      0.3
+                    ),
+                    4
+                  );
+                  scale = newScale;
+                  updateTransform();
+                }
+              }
+
+              e.preventDefault();
+            },
+            { passive: false }
+          );
+
+          mermaidElement.addEventListener("touchend", (e) => {
+            // 重置状态
+            if (e.touches.length === 0) {
+              isDragging = false;
+              isPinching = false;
+              initialDistance = 0;
+
+              // 延迟重置isTouch，避免鼠标事件立即触发
+              setTimeout(() => {
+                isTouch = false;
+              }, 100);
+            } else if (e.touches.length === 1 && isPinching) {
+              // 从双指变为单指，切换为拖动模式
+              isPinching = false;
+              isDragging = true;
+
+              const touch = e.touches[0];
+              startX = touch.clientX - translateX;
+              startY = touch.clientY - translateY;
+            }
+
+            updateTransform();
+          });
+
+          mermaidElement.addEventListener("touchcancel", (e) => {
+            isDragging = false;
+            isPinching = false;
+            initialDistance = 0;
+
+            setTimeout(() => {
+              isTouch = false;
+            }, 100);
+
+            updateTransform();
+          });
+
+          // Enhanced wheel zoom with better center point handling
+          container.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+            // Adjust translation to zoom towards center
+            if (newScale !== scale) {
+              const scaleDiff = newScale / scale;
+              translateX = translateX * scaleDiff;
+              translateY = translateY * scaleDiff;
+              scale = newScale;
+
+              if (scale <= 1) {
+                translateX = 0;
+                translateY = 0;
+              }
+
+              updateTransform();
+            }
+          });
+
+          // Initialize display
+          updateTransform();
+        });
+      }
+
+      // Initialize mermaid controls after DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeMermaidControls();
+      });
+    </script>
+  </body>
+</html>
